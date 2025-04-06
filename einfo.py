@@ -233,7 +233,8 @@ def renology_read(modbus_device="/dev/ttyUSB0", modbus_slave_address=1):
         # Auxilliary battery State of charge
         "auxSoc": instrument.read_register(0x100),
         "auxVoltage": instrument.read_register(0x101,1),
-        # combined charging current from solar+alternator to the auxilliary battery
+        # combined charging current from solar+alternator to the auxilliary
+        # battery
         "maxCharge": instrument.read_register(0x102,2),
         "controllerTemp": int(tempController),
         "auxTemp": int(tempAuxBatt),
@@ -284,6 +285,7 @@ else:
     battery_bms_read(sys.argv[1])
     renology = renology_read()
     print(renology)
+    print('Temperature:', renology['controllerTemp'])
     print("Solar:")
     print("  V:", renology['solVoltage'], "I:", renology['solAmps'],
           "W:", renology['solWatts'],
@@ -291,3 +293,7 @@ else:
     print("Battery:")
     print("  V:", renology['auxVoltage'], bms['Vbat'], "I:", bms['Ibat'],
           "W:", bms['Vbat']*bms['Ibat'], bms['Percent'], '%')
+    print("Alternator:")
+    print("  V:", renology['altVoltage'], "I:", renology['altAmps'],
+          "W:", renology['altWatts'],
+          round(float(renology['altVoltage'])*float(renology['altAmps']),3))
